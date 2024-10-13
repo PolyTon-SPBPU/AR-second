@@ -9,47 +9,18 @@ function getQueryString() {
 }
 
 function AR(price) {
-    AFRAME.registerComponent('diceAnim', {
-        schema: {},
-        init: function () {
-        },
-        update: function () {
-        },
-        tick: function () {
-            console.log("tick");
-            while (this.el.object3D.position.z < -0.5) {
-                this.el.object3D.position.z += 0.01;
-            }
+    let marker = document.querySelector("#marker");
+    let video = document.querySelector("#video_writer");
 
-        },
-        remove: function () {
-        },
-        pause: function () {
-        },
-        play: function () {
-        }
-    });
-    document.addEventListener("DOMContentLoaded", () => {
-        let marker = document.querySelector("#marker");
-        let soundDice = document.querySelector("#sound_dice");
-        let soundVictory = document.querySelector("#sound_victory");
-        let dice1 = document.querySelector("#dice1");
-
-        let text = document.querySelector("#text_price");
-        text.setAttribute("value", "You have got " + price + " ITokens!");
-
-        marker.addEventListener('markerLost', function () {
-            soundDice.pause();
-        });
-        marker.addEventListener('markerFound', function () {
-            soundDice.play();
-            soundVictory.play();
-        });
-        soundDice.addEventListener('soundEnded', function () {
-            soundVictory.play();
-        });
+    marker.addEventListener('markerLost', function () {
+        console.log("video pause");
+        video.pause();
     });
 
+    marker.addEventListener('markerFound', function () {
+        console.log("video start");
+        video.play();
+    });
 }
 
 function getTaskInfo(accessToken, taskId, listener) {
@@ -63,7 +34,7 @@ function getTaskInfo(accessToken, taskId, listener) {
     })
         .then(
             res => {
-                if(res.ok) {
+                if (res.ok) {
                     res.json().then(
                         resJsonData => {
                             console.log("Successful fetch!!!");
@@ -76,13 +47,14 @@ function getTaskInfo(accessToken, taskId, listener) {
 }
 
 
+
+
 let queryParams = getQueryString();
 let accessToken = queryParams.access_token;
 let taskId = queryParams.task_id
 console.log("Task id got: " + taskId);
 getTaskInfo(accessToken, taskId,
     price => {
-        AR(price);
     }
 );
 

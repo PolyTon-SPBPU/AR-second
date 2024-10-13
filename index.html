@@ -7,76 +7,31 @@
 </head>
 <body>
 <script src="index.js"></script>
-<!--<script>-->
-<!--    AFRAME.registerComponent('diceAnim', {-->
-<!--        schema: {},-->
-<!--        init: function () {-->
-<!--        },-->
-<!--        update: function () {-->
-<!--        },-->
-<!--        tick: function () {-->
-<!--            console.log("tick");-->
-<!--            while (this.el.object3D.position.z < -0.5) {-->
-<!--                this.el.object3D.position.z += 0.01;-->
-<!--            }-->
+<script>
+    document.addEventListener("DOMContentLoaded", () =>{
+        let marker = document.querySelector("#marker");
+        let video = document.querySelector("#video_writer");
 
-<!--        },-->
-<!--        remove: function () {-->
-<!--        },-->
-<!--        pause: function () {-->
-<!--        },-->
-<!--        play: function () {-->
-<!--        }-->
-<!--    });-->
-<!--    document.addEventListener("DOMContentLoaded", () => {-->
-<!--        let marker = document.querySelector("#marker");-->
-<!--        let soundDice = document.querySelector("#sound_dice");-->
-<!--        let soundVictory = document.querySelector("#sound_victory");-->
+        marker.addEventListener('markerLost', function () {
+            console.log("video pause");
+            video.pause();
+        });
 
-<!--        marker.addEventListener('markerLost', function () {-->
-<!--            soundDice.pause();-->
-<!--        });-->
-<!--        marker.addEventListener('markerFound', function () {-->
-<!--            soundVictory.play();-->
-<!--            soundDice.play();-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-<a-scene embedded arjs>
+        marker.addEventListener('markerFound', function () {
+            console.log("video start");
+            video.play();
+        });
+    });
+</script>
+<a-scene embedded ar var-mode-ui="enabled: false" arjs="trackingMethod: best; sourceType: webcam;"
+         renderer="logarithmicDepthBuffer: true;">
     <a-assets>
-        <img id="image_itoken" src="assets/itoken.png">
-        <audio id="sound_dice" src="assets/sound_dice.mp3" preload="auto"/>
-        <audio id="sound_victory" src="assets/sound_victory.mp3" preload="auto"/>
-        <a-asset-item
-                id="dice"
-                src="assets/dice.glb">
-        </a-asset-item>
+        <video id="video_writer" src="assets/video_writer.mp4" loop="true"></video>
     </a-assets>
 
     <a-marker id="marker" type="pattern" url="assets/marker.patt">
-        <a-image src="#image_itoken" position="0 0 -1" scale="0.7 0.7 0.7" rotation="270 -45 0"
-                animation="property: rotation; to: 270 45 0; dur: 1000; dir: alternate; loop: true;"></a-image>
-        <a-audio src="#sound_dice"  ></a-audio>
-        <a-audio src="#sound_victory"  ></a-audio>
-        <a-entity
-                diceAnim
-                id="dice1"
-                gltf-model="#dice"
-                scale="0.3 0.3 0.3"
-                rotation="45 1 359"
-                position="-1 0 0"
-                animation="property: rotation; to: 45 359 1; dur: 1200; loop: true"
-        ></a-entity>
-        <a-entity
-                diceAnim
-                id="dice2"
-                gltf-model="#dice"
-                scale="0.3 0.3 0.3"
-                rotation="45 1 359"
-                position="1 0 0"
-                animation="property: rotation; to: 45 359 1; dur: 1200; loop: true"
-        ></a-entity>
-        <a-text id="text_price" value="You have got 30 ITokens!" color="#FFFFFF" position="-1.8 0 1.5" scale="1.5 1.5 1.5" rotation="270 0 0"></a-text>
+        <a-video position="0 0.2 0" src="#video_writer" rotation="-90 0 0" scale="3.84 2.16 1"></a-video>
+        <a-text id="text_writer" value="Fedor Dostoevsky: life and art" color="#FFFFFF" position="-2 0 -1.5" scale="1.5 1.5 1.5" rotation="270 0 0"></a-text>
     </a-marker>
     <a-entity camera></a-entity>
 </a-scene>
